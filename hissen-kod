@@ -1,0 +1,50 @@
+// Avståndsmätare
+const int trigPin = 8;
+const int echoPin = 9;
+
+// Motor
+const int motorUp = 10;
+const int motorDown = 11;
+
+void setup() {
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+
+  pinMode(motorUp, OUTPUT);
+  pinMode(motorDown, OUTPUT);
+
+  Serial.begin(9600);
+}
+
+void loop() {
+  int distance = measureDistance();
+  Serial.println(distance);
+
+  if (distance > 15) {
+    // Kör nerz
+    digitalWrite(motorUp, LOW);
+    digitalWrite(motorDown, HIGH);
+  }
+  else if (distance < 7) {
+    // Kör upp
+    digitalWrite(motorUp, HIGH);
+    digitalWrite(motorDown, LOW);
+  }
+  else {
+    // Stanna
+    digitalWrite(motorUp, LOW);
+    digitalWrite(motorDown, LOW);
+  }
+}
+
+int measureDistance() {
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  long duration = pulseIn(echoPin, HIGH);
+  return duration * 0.034 / 2;
+}
